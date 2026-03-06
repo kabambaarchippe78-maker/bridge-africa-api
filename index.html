@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bridge Africa Service</title>
+
+<style>
+body {
+margin: 0;
+font-family: Arial, sans-serif;
+background-color: #f5f5f5;
+color: #333;
+}
+
+header {
+background: linear-gradient(to right, #0f4c5c, #2c7a7b);
+color: white;
+padding: 40px 20px;
+text-align: center;
+}
+
+section {
+padding: 50px 20px;
+max-width: 1000px;
+margin: auto;
+}
+
+h2 {
+color: #0f4c5c;
+}
+
+.services, .countries {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+gap: 20px;
+}
+
+.card {
+background: white;
+padding: 20px;
+border-radius: 10px;
+box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+button {
+background-color: #2c7a7b;
+color: white;
+border: none;
+padding: 12px 20px;
+border-radius: 5px;
+cursor: pointer;
+}
+
+button:hover {
+background-color: #1b5e63;
+}
+
+form {
+display: flex;
+flex-direction: column;
+gap: 15px;
+}
+
+input, select {
+padding: 10px;
+border-radius: 5px;
+border: 1px solid #ccc;
+}
+
+footer {
+background: #0f4c5c;
+color: white;
+text-align: center;
+padding: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>Bridge Africa Service</h1>
+<p>Votre partenaire de confiance</p>
+</header>
+
+<section>
+<h2>Nos Services</h2>
+<div class="services">
+<div class="card">
+<h3>🎓 Études à l’étranger</h3>
+<p>Accompagnement complet pour vos études en Biélorussie, Turquie et Tunisie.</p>
+</div>
+<div class="card">
+<h3>🏥 Soins médicaux</h3>
+<p>Organisation de vos soins médicaux à l'étranger avec suivi personnalisé.</p>
+</div>
+<div class="card">
+<h3>🧳 Visa Touristique</h3>
+<p>Assistance rapide et fiable pour l’obtention de votre visa.</p>
+</div>
+</div>
+</section>
+
+<section>
+<h2>Pays Principaux</h2>
+<div class="countries">
+<div class="card">🇧🇾 Biélorussie</div>
+<div class="card">🇹🇷 Turquie</div>
+<div class="card">🇹🇳 Tunisie</div>
+</div>
+</section>
+
+<section>
+<h2>Faire une demande</h2>
+<form id="demandeForm">
+<input type="text" placeholder="Nom complet" required>
+<input type="email" placeholder="Email" required>
+<input type="tel" placeholder="Téléphone" required>
+<select required>
+<option value="">Choisir un service</option>
+<option>Études</option>
+<option>Soins médicaux</option>
+<option>Visa touristique</option>
+</select>
+<select required>
+<option value="">Choisir un pays</option>
+<option>Biélorussie</option>
+<option>Turquie</option>
+<option>Tunisie</option>
+</select>
+<button type="submit">Envoyer la demande</button>
+</form>
+</section>
+
+<footer>
+© 2026 Bridge Africa Service - Tous droits réservés
+</footer>
+<script>
+document.getElementById("demandeForm").addEventListener("submit", async function(e) {
+e.preventDefault();
+
+const inputs = this.querySelectorAll("input, select");
+
+const data = {
+nom: inputs[0].value,
+email: inputs[1].value,
+telephone: inputs[2].value,
+service: inputs[3].value,
+pays: inputs[4].value
+};
+
+try {
+const response = await fetch("http://127.0.0.1:8000/demandes", {
+method: "POST",
+headers: {
+"Content-Type": "application/json"
+},
+body: JSON.stringify(data)
+});
+
+if (response.ok) {
+alert("Demande envoyée avec succès !");
+this.reset();
+} else {
+alert("Erreur lors de l'envoi.");
+}
+
+} catch (error) {
+alert("Impossible de contacter le serveur.");
+}
+});
+</script>
+</body>
+</html>
