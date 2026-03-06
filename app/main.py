@@ -1,8 +1,10 @@
+from fastapi.middleware.cors import CORSMiddleware
 from dns.e164 import query
 from fastapi import Header, HTTPException
 from pydantic import BaseModel, EmailStr
 from datetime import datetime
 from sqlalchemy.orm import Session
+
 from app.database import SessionLocal
 from fastapi import Depends
 from fastapi import FastAPI
@@ -12,6 +14,13 @@ def verifier_token(x_token: str = Header(...)):
     if x_token != "monsecret123":
         raise HTTPException(status_code=401, detail="Token invalide")
 app = FastAPI(title="Bridge Africa Travel API")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
 Base.metadata.create_all(bind=engine)
 @app.get("/")
 def home():
