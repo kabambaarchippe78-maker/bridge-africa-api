@@ -1,6 +1,5 @@
 from fastapi.middleware.cors import CORSMiddleware
 from dns.e164 import query
-from fastapi import Header, HTTPException
 from pydantic import BaseModel, EmailStr
 from datetime import datetime
 from sqlalchemy.orm import Session
@@ -10,9 +9,6 @@ from fastapi import Depends
 from fastapi import FastAPI
 from app.database import engine, Base
 from app.models import Demande
-def verifier_token(x_token: str = Header(...)):
-    if x_token != "monsecret123":
-        raise HTTPException(status_code=401, detail="Token invalide")
 app = FastAPI(title="Bridge Africa Travel API")
 app.add_middleware(
     CORSMiddleware,
@@ -66,18 +62,14 @@ def lire_demandes(pays: str | None, db: Session = Depends(get_db)):
         query = query.filter(Demande.pays == pays)
     demandes = query.all()
     return demandes
-@app.delete("/demandes/{demande_id}")
-def supprimer_demande(
-        demande_id: int,
-        db: Session = Depends(get_db),
-        token: str = Depends(verifier_token)
-):
+@app.delete(("/demandes/{demande_id}"))
+def supprimer_demande(demande_id: int, db: Session = Depends(get_db)):
     demande = db.query(Demande).filter(Demande.id == demande_id).first()
-    if not demande:
+    if demande:
         return {"message": "Demande non trouvée"}
     db.delete(demande)
     db.commit()
-    return {"message": "Demande supprimée avec succès"}
+    return {"message": "Demande supprimer avec succès"}
 @app.put("/demandes/{demande_id}")
 def modifier_demande(demande_id: int, demande: DemandeCreate, db: Session = Depends(get_db)):
     demande_db = db.query(Demande).filter(Demande.id == demande_id).first()
