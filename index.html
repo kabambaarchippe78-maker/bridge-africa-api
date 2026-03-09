@@ -149,7 +149,8 @@ telephone: inputs[2].value,
 service: inputs[3].value,
 pays: inputs[4].value
 };
-
+envoyerDemande(data);
+async function envoyerDemande(data){
 try {
 const response = await fetch("https://bridge-africa-api.onrender.com/demandes", {
 method: "POST",
@@ -168,6 +169,7 @@ alert("Erreur lors de l'envoi.");
 
 } catch (error) {
 alert("Impossible de contacter le serveur.");
+}
 }
 });
 </script>
